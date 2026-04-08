@@ -18,21 +18,42 @@ const PROJECT_TYPES = ['Select project type...', 'Windows', 'Doors', 'Partitions
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', phone: '', email: '', type: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => { 
+  const handleSubmit = async (e: React.FormEvent) => { 
     e.preventDefault(); 
+    setIsSubmitting(true);
     
-    // Construct payload for native email client
-    const subject = `Website Inquiry: ${form.type || 'General Questions'}`;
-    const body = `Name: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\nProject Type: ${form.type}\n\nMessage:\n${form.message}`;
-    
-    // Trigger email client
-    window.location.href = `mailto:rajalluminiums@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    try {
+      const payload = {
+        access_key: "c248e694-8f09-429e-aaee-98d26f1315db", // <--- KEY INJECTED HERE
+        subject: `New Lead: ${form.type || 'General Questions'}`,
+        from_name: form.name,
+        email: form.email,
+        phone: form.phone,
+        message: form.message
+      };
 
-    setSubmitted(true); 
-    setForm({ name: '', phone: '', email: '', type: '', message: '' });
-    setTimeout(() => setSubmitted(false), 4000); 
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        setSubmitted(true); 
+        setForm({ name: '', phone: '', email: '', type: '', message: '' });
+        setTimeout(() => setSubmitted(false), 5000); 
+      } else {
+        alert("Something went wrong. Please reach out via WhatsApp directly.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error. Please reach out via WhatsApp directly.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const inputStyle: React.CSSProperties = { backgroundColor: '#FFFFFF', color: '#1A1C1A', border: '1px solid transparent', borderRadius: '0.75rem', padding: '0.75rem 1rem', fontSize: '0.875rem', outline: 'none', width: '100%', transition: 'border-color 0.2s', boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.03)' };
@@ -76,7 +97,9 @@ export default function Contact() {
                     <label className="text-xs font-bold uppercase tracking-wider mb-1.5 block" style={{ color: '#444653' }}>Message</label>
                     <textarea rows={4} style={inputStyle} placeholder="Tell us about your project..." value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} onFocus={(e) => e.target.style.borderColor = '#00288E'} onBlur={(e) => e.target.style.borderColor = 'transparent'} />
                   </div>
-                  <Button className="w-full" size="lg" type="submit">Send Message</Button>
+                  <Button className="w-full" size="lg" type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                  </Button>
                 </form>
               )}
             </GlassCard>
