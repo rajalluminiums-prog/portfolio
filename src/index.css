@@ -1,0 +1,65 @@
+/* ═══════════════════════════════════════════════════════════════
+   Crystal Forge Design System — Minimal CSS
+   All component styling via Tailwind utilities + inline styles
+   ═══════════════════════════════════════════════════════════════ */
+
+@import "tailwindcss";
+
+@import "@fontsource/outfit/400.css";
+@import "@fontsource/outfit/500.css";
+@import "@fontsource/outfit/600.css";
+@import "@fontsource/outfit/700.css";
+@import "@fontsource/outfit/800.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+
+@theme {
+  --font-heading: "Outfit", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+}
+
+/* ──────────────────
+   Gradient text
+   ────────────────── */
+.text-gradient {
+  background: linear-gradient(135deg, #1E40AF, #0EA5E9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ──────────────────
+   Section Container
+   ────────────────── */
+.section-container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (min-width: 768px) {
+  .section-container { padding-left: 2.5rem; padding-right: 2.5rem; }
+}
+@media (min-width: 1024px) {
+  .section-container { padding-left: 4rem; padding-right: 4rem; }
+}
+
+/* ──────────────────
+   Ticker Animation
+   ────────────────── */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-ticker {
+  animation: ticker 30s linear infinite;
+}
+
+/* ──────────────────
+   Custom Scrollbar
+   ────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #94A3B8; border-radius: 3px; }
