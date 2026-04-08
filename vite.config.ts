@@ -10,10 +10,12 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'framer-motion': ['framer-motion'],
-          'icons': ['react-icons']
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('framer-motion')) return 'framer-motion';
+            if (id.includes('react-icons')) return 'icons';
+            if (id.includes('react-') || id.includes('react/')) return 'react-vendor';
+          }
         }
       }
     }
