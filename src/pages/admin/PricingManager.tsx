@@ -15,6 +15,7 @@ export default function PricingManager() {
   
   const [rates, setRates] = useState<Rate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   
   // New Rate Form State
   const [category, setCategory] = useState<CategoryType>('Window');
@@ -250,8 +251,8 @@ export default function PricingManager() {
                 />
               </div>
 
-              <button type="submit" className="w-full bg-primary text-white py-2 rounded font-bold hover:bg-primary/90 transition">
-                Save Rule
+              <button type="submit" disabled={isSaving} className="w-full bg-primary text-white py-2 rounded font-bold hover:bg-primary/90 transition disabled:opacity-50">
+                {isSaving ? 'Saving...' : 'Save Rule'}
               </button>
             </div>
           </form>

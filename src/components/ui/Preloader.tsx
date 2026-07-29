@@ -19,8 +19,8 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   }, [onComplete]);
 
   // Easing curves for cinematic premium feel
-  const forgeEase = [0.76, 0, 0.24, 1];
-  const flyThroughEase = [0.9, 0, 0.1, 1];
+  const forgeEase = [0.76, 0, 0.24, 1] as const;
+  const flyThroughEase = [0.9, 0, 0.1, 1] as const;
 
   return (
     <div className="fixed inset-0 z-[10000] pointer-events-none overflow-hidden">
