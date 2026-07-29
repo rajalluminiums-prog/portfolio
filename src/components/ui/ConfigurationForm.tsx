@@ -25,7 +25,7 @@ const CATEGORIES = [
 const ATTRIBUTE_OPTIONS = {
   Window: [
     { id: 'track', label: 'Track System', options: ['2T', '3T'] },
-    { id: 'gauge', label: 'Gauge & Profile', options: ['18G', '20G', '60mm', 'Domal'] },
+    { id: 'gauge', label: 'Gauge', options: ['18G', '20G', '60mm', 'Domal'] },
   ],
   Door: [
     { id: 'material', label: 'Frame Type', options: ['Heavy', 'Medium'] },
@@ -109,14 +109,14 @@ export default function ConfigurationForm({ onSpecsChange }: ConfigurationFormPr
                   {ATTRIBUTE_OPTIONS[category as keyof typeof ATTRIBUTE_OPTIONS]?.map(attr => (
                     <div key={attr.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-base/50 rounded-xl border border-ink/5">
                       <span className="text-sm font-semibold text-ink/80">{attr.label}</span>
-                      <div className="relative flex p-1 bg-[#EAE9E5] rounded-lg w-full sm:w-auto">
+                      <div className="relative flex flex-wrap p-1 gap-1 bg-[#EAE9E5] rounded-lg w-full sm:w-auto">
                         {attr.options.map(opt => {
                           const isSelected = attributes[attr.id] === opt;
                           return (
                             <button
                               key={opt}
                               onClick={() => handleAttributeSelect(attr.id, opt)}
-                              className={`relative flex-1 sm:flex-none min-w-[80px] px-3 py-1.5 text-xs font-bold transition-colors z-10 cursor-pointer ${
+                              className={`relative flex-1 sm:flex-none min-w-[60px] px-2 sm:px-3 py-1.5 text-xs font-bold transition-colors z-10 cursor-pointer ${
                                 isSelected ? 'text-ink' : 'text-text-muted hover:text-ink'
                               }`}
                             >
@@ -144,52 +144,52 @@ export default function ConfigurationForm({ onSpecsChange }: ConfigurationFormPr
               <div className="grid grid-cols-2 gap-4">
                 
                 {/* Width */}
-                <div className="bg-white border border-ink/10 rounded-xl p-3 focus-within:border-primary/40 focus-within:ring-1 focus-within:ring-primary/40 transition-all">
+                <div className="bg-white border border-ink/10 rounded-xl p-2 sm:p-3 focus-within:border-primary/40 focus-within:ring-1 focus-within:ring-primary/40 transition-all">
                   <span className="block text-[10px] uppercase font-bold text-text-muted mb-1">Width</span>
-                  <div className="flex items-baseline gap-1">
+                  <div className="flex items-baseline justify-between gap-0.5 sm:gap-1">
                     <input 
                       type="number" 
                       min="0"
                       value={dimensions.widthFeet || ''}
                       onChange={(e) => handleDimensionChange('widthFeet', parseInt(e.target.value) || 0)}
                       placeholder="0"
-                      className="w-12 text-2xl font-black font-heading text-ink bg-transparent outline-none p-0 text-right placeholder:text-ink/20" 
+                      className="w-6 sm:w-12 text-lg sm:text-2xl font-black font-heading text-ink bg-transparent outline-none p-0 text-right placeholder:text-ink/20" 
                     />
-                    <span className="text-sm font-bold text-text-muted mr-2">ft</span>
+                    <span className="text-xs sm:text-sm font-bold text-text-muted mr-1 sm:mr-2">ft</span>
                     <input 
                       type="number" 
                       min="0" max="11"
                       value={dimensions.widthInches || ''}
                       onChange={(e) => handleDimensionChange('widthInches', parseInt(e.target.value) || 0)}
                       placeholder="0"
-                      className="w-10 text-xl font-bold font-heading text-ink bg-transparent outline-none p-0 text-right placeholder:text-ink/20" 
+                      className="w-6 sm:w-10 text-base sm:text-xl font-bold font-heading text-ink bg-transparent outline-none p-0 text-right placeholder:text-ink/20" 
                     />
-                    <span className="text-sm font-bold text-text-muted">in</span>
+                    <span className="text-xs sm:text-sm font-bold text-text-muted">in</span>
                   </div>
                 </div>
 
                 {/* Height */}
-                <div className="bg-white border border-ink/10 rounded-xl p-3 focus-within:border-primary/40 focus-within:ring-1 focus-within:ring-primary/40 transition-all">
+                <div className="bg-white border border-ink/10 rounded-xl p-2 sm:p-3 focus-within:border-primary/40 focus-within:ring-1 focus-within:ring-primary/40 transition-all">
                   <span className="block text-[10px] uppercase font-bold text-text-muted mb-1">Height</span>
-                  <div className="flex items-baseline gap-1">
+                  <div className="flex items-baseline justify-between gap-0.5 sm:gap-1">
                     <input 
                       type="number" 
                       min="0"
                       value={dimensions.heightFeet || ''}
                       onChange={(e) => handleDimensionChange('heightFeet', parseInt(e.target.value) || 0)}
                       placeholder="0"
-                      className="w-12 text-2xl font-black font-heading text-ink bg-transparent outline-none p-0 text-right placeholder:text-ink/20" 
+                      className="w-6 sm:w-12 text-lg sm:text-2xl font-black font-heading text-ink bg-transparent outline-none p-0 text-right placeholder:text-ink/20" 
                     />
-                    <span className="text-sm font-bold text-text-muted mr-2">ft</span>
+                    <span className="text-xs sm:text-sm font-bold text-text-muted mr-1 sm:mr-2">ft</span>
                     <input 
                       type="number" 
                       min="0" max="11"
                       value={dimensions.heightInches || ''}
                       onChange={(e) => handleDimensionChange('heightInches', parseInt(e.target.value) || 0)}
                       placeholder="0"
-                      className="w-10 text-xl font-bold font-heading text-ink bg-transparent outline-none p-0 text-right placeholder:text-ink/20" 
+                      className="w-6 sm:w-10 text-base sm:text-xl font-bold font-heading text-ink bg-transparent outline-none p-0 text-right placeholder:text-ink/20" 
                     />
-                    <span className="text-sm font-bold text-text-muted">in</span>
+                    <span className="text-xs sm:text-sm font-bold text-text-muted">in</span>
                   </div>
                 </div>
 

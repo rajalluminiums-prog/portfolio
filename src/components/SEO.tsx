@@ -12,11 +12,11 @@ interface SEOProps {
 }
 
 export default function SEO({
-  title = "Premium Aluminium Fabricators & Sliding Windows in Indore | Raj Alluminiums",
-  description = "Top-rated aluminium fabricators in Indore. Specializing in sliding & openable windows, office doors, custom partitions, cabin setups, and kitchen profile work.",
-  keywords = "aluminium fabricators in Indore, sliding windows, openable windows, 2 track windows, 3 track windows, office doors, sliding doors, partition work, office cabins, custom partitions, kitchen profile work",
-  url = "https://rajalluminiums.in/",
-  image = "https://rajalluminiums.in/logo.png",
+  title = "Premium Aluminium Fabricators & Sliding Windows in Indore | Raj Aluminiums",
+  description = "Top-rated aluminium fabricators in Indore. Specializing in sliding & openable windows, office doors, custom partitions, sliding setups, and kitchen profile work.",
+  keywords = "aluminium fabricators in Indore, sliding windows, openable windows, 2 track windows, 3 track windows, office doors, sliding doors, partition work, sliders, custom partitions, kitchen profile work",
+  url = "https://rajAluminiums.in/",
+  image = "https://rajAluminiums.in/logo.png",
   structuredData,
 }: SEOProps) {
   const [stats, setStats] = useState({ average: 0, total: 0 });
@@ -31,7 +31,7 @@ export default function SEO({
   const defaultSchema: any = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "Raj Alluminiums & Door House",
+    "name": "Raj Aluminiums & Door House",
     "image": image,
     "@id": url,
     "url": url,

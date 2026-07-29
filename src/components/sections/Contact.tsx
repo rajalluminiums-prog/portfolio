@@ -11,7 +11,7 @@ import { FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 const CONTACT_INFO = [
   { icon: <HiOutlineLocationMarker className="w-5 h-5" />, label: 'Address', value: '187, GNT Market, Indore(MP)' },
   { icon: <HiOutlinePhone className="w-5 h-5" />, label: 'Phone', value: '+91 8602379396' },
-  { icon: <HiOutlineMail className="w-5 h-5" />, label: 'Email', value: 'rajalluminiums@gmail.com' },
+  { icon: <HiOutlineMail className="w-5 h-5" />, label: 'Email', value: 'rajAluminiums@gmail.com' },
   { icon: <HiOutlineClock className="w-5 h-5" />, label: 'Hours', value: 'Mon – Sat: 9:00 AM – 7:00 PM' },
 ];
 

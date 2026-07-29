@@ -54,11 +54,11 @@ export default function Footer() {
             <div className="flex items-center gap-3 mb-6">
               <img 
                 src="/logo.png" 
-                alt="Raj Alluminiums Logo" 
+                alt="Raj Aluminiums Logo" 
                 className="w-12 h-12 rounded-xl object-contain border border-[#C4C5D5]/20 shadow-sm bg-[#FAF9F6] p-0.5"
               />
               <div>
-                <p className="font-heading font-bold text-lg leading-tight text-white">Raj Alluminiums</p>
+                <p className="font-heading font-bold text-lg leading-tight text-white">Raj Aluminiums</p>
                 <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#C4C5D5]">& Door House</p>
               </div>
             </div>
@@ -70,7 +70,7 @@ export default function Footer() {
             <div className="flex items-center gap-4">
               {[
                 { icon: FiFacebook, link: '#' },
-                { icon: FiInstagram, link: '#' },
+                { icon: FiInstagram, link: 'https://www.instagram.com/rajAluminiums/' },
                 { icon: FaWhatsapp, link: 'https://wa.me/918602379396' }
               ].map((social, idx) => {
                 const Icon = social.icon;
@@ -130,7 +130,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-4">
                 <FiMail className="w-5 h-5 text-[#C4C5D5] shrink-0" />
-                <p>rajalluminiums@gmail.com</p>
+                <p>rajAluminiums@gmail.com</p>
               </div>
               <div className="flex items-center gap-4 mt-2 pt-4 border-t border-[#C4C5D5]/10">
                 <FiClock className="w-5 h-5 text-[#C4C5D5]/50 shrink-0" />
@@ -143,7 +143,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-[#C4C5D5]/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-[#C4C5D5]/60">
-          <p>&copy; {new Date().getFullYear()} Raj Alluminiums & Door House. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Raj Aluminiums & Door House. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>

@@ -1,45 +1,57 @@
 import { useRef, useState } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
-import { FiShield, FiMaximize, FiLayers, FiChevronDown } from 'react-icons/fi';
+import { FiShield, FiMaximize, FiLayers, FiChevronDown, FiGrid } from 'react-icons/fi';
 import SectionHeading from '../ui/SectionHeading';
 
-import portfolioBg1 from '../../assets/hero.png';
-import portfolioBg2 from '../../assets/portfolio-window.png';
-import portfolioBg3 from '../../assets/portfolio-door.png';
+import expArchWindows from '../../assets/exp_arch_windows.jpg';
+import expPremEntrances from '../../assets/exp_prem_entrances.jpg';
+import expPartitions from '../../assets/exp_partitions.jpg';
+import expSpecialGlass from '../../assets/exp_special_glass.jpg';
 
 const SERVICES = [
   {
     title: 'Architectural Windows',
-    subtitle: 'Unlock Superior Thermal Performance',
-    description: 'Use our slimline profiles for residential and commercial spaces to maximize views and simplify aesthetics with acoustic security.',
+    subtitle: 'Precision Engineered Window Systems',
+    description: 'Maximizing natural light and thermal efficiency. Our comprehensive range covers heavy-duty sliding systems, elegant openable casements, minimal fixed frames, and premium Domal window works for unmatched durability.',
     features: ['Slimline Profiles', 'Double Glazed'],
-    image: portfolioBg2,
+    image: expArchWindows,
     icon: FiMaximize,
-    floatingText1: 'Maximum Vision',
-    floatingText2: 'Acoustic Rated',
+    floatingText1: 'Smooth Glide',
+    floatingText2: 'Weather Sealed',
     alt: 'Premium aluminium sliding windows and architectural window fabricators in Indore',
   },
   {
-    title: 'Premium Entrances',
-    subtitle: 'Make a Statement with Pivot Doors',
-    description: 'Transform your entrance with monumental scale. Our pivot and sliding systems combine smooth mechanization with impenetrable security.',
+    title: 'Premium Entrances & Doors',
+    subtitle: 'Seamless Commercial & Residential Access',
+    description: 'Monumental scale meets effortless mechanization. We fabricate tailored office doors, acoustic sliding doors, and secure openable entrance systems designed for high-traffic and acoustic security.',
     features: ['Automated Sliders', 'Pivot Systems'],
-    image: portfolioBg3,
+    image: expPremEntrances,
     icon: FiShield,
-    floatingText1: 'Secure Access',
+    floatingText1: 'Acoustic Rated',
     floatingText2: 'Soft Close',
     alt: 'Aluminium office doors, sliding doors, and premium entrance installations in Indore',
   },
   {
-    title: 'Structural Glazing',
-    subtitle: 'Blur the Boundary of Inside & Out',
-    description: 'Uninterrupted glass facades engineered without visible framing to maintain absolute structural integrity connecting elements.',
+    title: 'Bespoke Partitions & Sliders',
+    subtitle: 'Intelligent Spatial Division',
+    description: 'Transform open spaces into focused environments. We specialize in custom aluminium partitions and fully integrated sliding systems, delivering privacy without sacrificing architectural flow.',
     features: ['Curtain Walls', 'Spider Glazing'],
-    image: portfolioBg1,
+    image: expPartitions,
     icon: FiLayers,
-    floatingText1: 'Frameless',
-    floatingText2: 'High Tension',
-    alt: 'Structural glazing, curtain walls, and custom aluminium partitions in Indore',
+    floatingText1: 'Custom Fit',
+    floatingText2: 'Sound Proof',
+    alt: 'Custom aluminium partitions and sliders in Indore',
+  },
+  {
+    title: 'Specialized Glass & Profiles',
+    subtitle: 'Advanced Glazing & Interior Profiles',
+    description: 'From structural integrity to interior finesse. We provide architectural-grade toughened glass (Tuffan) installations and precision kitchen profile works that elevate modern interior design.',
+    features: ['Curtain Walls', 'Spider Glazing'],
+    image: expSpecialGlass,
+    icon: FiGrid,
+    floatingText1: 'High Tension',
+    floatingText2: 'Precision Finish',
+    alt: 'Toughened glass installations and kitchen profile works in Indore',
   }
 ];
 
@@ -52,22 +64,23 @@ export default function Services() {
     offset: ["start start", "end end"]
   });
 
-  // Convert continuous scroll into discrete triggers
+  // Convert continuous scroll into discrete triggers for 4 slides
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // We add small buffers to prevent flickering
-    if (latest < 0.3) {
+    if (latest < 0.25) {
       setActiveSlide(0);
-    } else if (latest >= 0.3 && latest < 0.6) {
+    } else if (latest >= 0.25 && latest < 0.5) {
       setActiveSlide(1);
-    } else if (latest >= 0.6) {
+    } else if (latest >= 0.5 && latest < 0.75) {
       setActiveSlide(2);
+    } else if (latest >= 0.75) {
+      setActiveSlide(3);
     }
   });
 
   const activeData = SERVICES[activeSlide];
 
   return (
-    <section ref={targetRef} id="services" className="relative h-[400vh] bg-[#FAF9F6]">
+    <section ref={targetRef} id="services" className="relative h-[500vh] bg-[#FAF9F6]">
       
       {/* Mobile-only unpinned header that scrolls away naturally to maximize screen real-estate */}
       <div className="md:hidden pt-[100px] pb-6 px-4 w-full flex justify-center">

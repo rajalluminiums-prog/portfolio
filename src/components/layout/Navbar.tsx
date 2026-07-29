@@ -84,11 +84,11 @@ export default function Navbar() {
             <a href="#hero" onClick={(e) => handleNavClick(e, '#hero')} className="flex items-center gap-3 group">
               <img 
                 src="/logo.png" 
-                alt="Raj Alluminiums Logo" 
+                alt="Raj Aluminiums Logo" 
                 className="w-10 h-10 rounded-xl object-contain transition-transform group-hover:scale-105 border border-[#1A1C1A]/10 shadow-sm bg-white"
               />
               <div className="hidden sm:block">
-                <p className={`font-heading font-bold text-sm leading-tight transition-colors ${scrolled ? 'text-[#1A1C1A]' : 'text-white'}`}>Raj Alluminiums</p>
+                <p className={`font-heading font-bold text-sm leading-tight transition-colors ${scrolled ? 'text-[#1A1C1A]' : 'text-white'}`}>Raj Aluminiums</p>
                 <p className={`text-[9px] font-bold tracking-[0.15em] uppercase transition-colors ${scrolled ? 'text-[#757684]' : 'text-white/70'}`}>& Door House</p>
               </div>
             </a>

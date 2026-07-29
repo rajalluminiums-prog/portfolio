@@ -27,7 +27,7 @@ export default function WhatsAppButton() {
 
       {/* Button */}
       <motion.a
-        href="https://wa.me/918602379396?text=Hi%20Raj%20Alluminiums,%20I%20found%20you%20via%20your%20website%20and%20would%20love%20to%20get%20a%20Quote."
+        href="https://wa.me/918602379396?text=Hi%20Raj%20Aluminiums,%20I%20found%20you%20via%20your%20website%20and%20would%20love%20to%20get%20a%20Quote."
         target="_blank"
         rel="noopener noreferrer"
         className="pointer-events-auto relative group flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#1EBE5A] rounded-full shadow-[0_8px_30px_rgba(37,211,102,0.4)] transition-colors duration-300"

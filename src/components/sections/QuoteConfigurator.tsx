@@ -51,6 +51,53 @@ export default function QuoteConfigurator() {
   const hasMesh = specs?.category === 'Window' ? true : false; 
   const isFix = specs?.category === 'Fix';
 
+  const QuoteResultCard = () => (
+    <AnimatePresence>
+      {(isLoading || quoteResult || error) && (
+        <motion.div 
+          initial={{ opacity: 0, y: 30, scale: 0.95 }} 
+          animate={{ opacity: 1, y: 0, scale: 1 }} 
+          exit={{ opacity: 0, y: 20, scale: 0.95 }}
+          className="bg-white/90 backdrop-blur-xl p-6 rounded-2xl shadow-xl border border-white overflow-hidden w-full"
+        >
+          {isLoading && (
+            <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-10">
+              <div className="w-8 h-8 border-3 border-primary/20 border-t-primary rounded-full animate-spin" />
+            </div>
+          )}
+          
+          {error ? (
+            <div className="text-red-500 font-semibold text-center py-4 flex items-center justify-center gap-2">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              {error}
+            </div>
+          ) : quoteResult ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between border-b border-ink/5 pb-4">
+                <div>
+                  <p className="text-text-muted text-xs font-bold uppercase tracking-widest mb-1">Estimated Total</p>
+                  <div className="flex items-baseline gap-2">
+                    <h4 className="text-3xl sm:text-4xl font-heading font-black text-ink">
+                      ₹{quoteResult.estimatedTotal.toLocaleString()}
+                    </h4>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-text-muted text-xs font-bold uppercase tracking-widest mb-1">Area</p>
+                  <p className="font-semibold text-ink">{quoteResult.areaSqFt} <span className="text-sm font-normal text-text-muted">sq ft</span></p>
+                </div>
+              </div>
+              <div className="flex justify-between items-center text-sm font-medium text-text-muted">
+                <p>Based on exact dimensions</p>
+                <p className="bg-base px-3 py-1 rounded-full text-xs font-bold text-ink">₹{quoteResult.pricePerSqFt}/sqft</p>
+              </div>
+            </div>
+          ) : null}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   return (
     <section id="quote" className="py-10 bg-base relative flex flex-col justify-center min-h-[calc(100vh-80px)]">
       <div className="section-container max-w-[1400px] mx-auto px-4 md:px-8 w-full">
@@ -97,59 +144,25 @@ export default function QuoteConfigurator() {
               )}
             </div>
 
-            {/* Floating Quote Result Card */}
-            <AnimatePresence>
-              {(isLoading || quoteResult || error) && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 30, scale: 0.95 }} 
-                  animate={{ opacity: 1, y: 0, scale: 1 }} 
-                  exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                  className="absolute bottom-6 left-6 right-6 lg:left-1/2 lg:-translate-x-1/2 lg:right-auto lg:w-[90%] max-w-md bg-white/90 backdrop-blur-xl p-6 rounded-2xl shadow-xl border border-white z-20 overflow-hidden"
-                >
-                  {isLoading && (
-                    <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-10">
-                      <div className="w-8 h-8 border-3 border-primary/20 border-t-primary rounded-full animate-spin" />
-                    </div>
-                  )}
-                  
-                  {error ? (
-                    <div className="text-red-500 font-semibold text-center py-4 flex items-center justify-center gap-2">
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                      {error}
-                    </div>
-                  ) : quoteResult ? (
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between border-b border-ink/5 pb-4">
-                        <div>
-                          <p className="text-text-muted text-xs font-bold uppercase tracking-widest mb-1">Estimated Total</p>
-                          <div className="flex items-baseline gap-2">
-                            <h4 className="text-4xl font-heading font-black text-ink">
-                              ₹{quoteResult.estimatedTotal.toLocaleString()}
-                            </h4>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-text-muted text-xs font-bold uppercase tracking-widest mb-1">Area</p>
-                          <p className="font-semibold text-ink">{quoteResult.areaSqFt} <span className="text-sm font-normal text-text-muted">sq ft</span></p>
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center text-sm font-medium text-text-muted">
-                        <p>Based on exact dimensions</p>
-                        <p className="bg-base px-3 py-1 rounded-full text-xs font-bold text-ink">₹{quoteResult.pricePerSqFt}/sqft</p>
-                      </div>
-                    </div>
-                  ) : null}
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Floating Quote Result Card (Desktop Only) */}
+            <div className="hidden lg:block absolute bottom-6 lg:left-1/2 lg:-translate-x-1/2 lg:w-[90%] max-w-md z-20">
+              <QuoteResultCard />
+            </div>
 
           </div>
 
           {/* Right Column: Configuration Form */}
-          <div className="lg:col-span-5 bg-white/70 rounded-3xl p-6 lg:p-8 shadow-[0_4px_40px_rgba(0,0,0,0.03)] border border-ink/5 h-auto lg:h-[700px] w-full">
-            <ConfigurationForm 
-              onSpecsChange={handleSpecsChange}
-            />
+          <div className="lg:col-span-5 flex flex-col gap-6 w-full">
+            <div className="bg-white/70 rounded-3xl p-6 lg:p-8 shadow-[0_4px_40px_rgba(0,0,0,0.03)] border border-ink/5 w-full">
+              <ConfigurationForm 
+                onSpecsChange={handleSpecsChange}
+              />
+            </div>
+
+            {/* Inline Quote Result Card (Mobile Only) */}
+            <div className="block lg:hidden w-full relative z-20 mb-8">
+               <QuoteResultCard />
+            </div>
           </div>
 
         </div>

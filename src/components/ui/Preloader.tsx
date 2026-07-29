@@ -63,7 +63,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           animate={{ clipPath: 'inset(0% 0 0 0)' }}
           transition={{ duration: 1.4, ease: forgeEase, delay: 0.2 }}
         >
-          <img src="/logo.png" alt="Raj Alluminiums Logo" className="w-full h-full object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.05)]" />
+          <img src="/logo.png" alt="Raj Aluminiums Logo" className="w-full h-full object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.05)]" />
         </motion.div>
 
         {/* Mask-Up Typography */}
@@ -74,7 +74,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             animate={{ y: '0%', opacity: 1 }}
             transition={{ duration: 0.8, ease: forgeEase, delay: 0.6 }}
           >
-            Raj Alluminiums
+            Raj Aluminiums
           </motion.h1>
         </div>
         

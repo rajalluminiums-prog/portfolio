@@ -77,7 +77,7 @@ export default function WhyChooseUs() {
              <SectionHeading 
                badge="Advantage" 
                title="Uncompromising Standards" 
-               subtitle="What firmly establishes Raj Alluminiums above industry equilibrium — absolute precision, radical deployment speed, and guaranteed structural reliance." 
+               subtitle="What firmly establishes Raj Aluminiums above industry equilibrium — absolute precision, radical deployment speed, and guaranteed structural reliance." 
                align="left"
              />
            </div>
