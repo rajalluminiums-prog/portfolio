@@ -17,6 +17,7 @@ const SERVICES = [
     icon: FiMaximize,
     floatingText1: 'Maximum Vision',
     floatingText2: 'Acoustic Rated',
+    alt: 'Premium aluminium sliding windows and architectural window fabricators in Indore',
   },
   {
     title: 'Premium Entrances',
@@ -27,6 +28,7 @@ const SERVICES = [
     icon: FiShield,
     floatingText1: 'Secure Access',
     floatingText2: 'Soft Close',
+    alt: 'Aluminium office doors, sliding doors, and premium entrance installations in Indore',
   },
   {
     title: 'Structural Glazing',
@@ -37,6 +39,7 @@ const SERVICES = [
     icon: FiLayers,
     floatingText1: 'Frameless',
     floatingText2: 'High Tension',
+    alt: 'Structural glazing, curtain walls, and custom aluminium partitions in Indore',
   }
 ];
 
@@ -104,7 +107,7 @@ export default function Services() {
               >
                 <img 
                   src={activeData.image} 
-                  alt={`${activeData.title} installations in Indore`} 
+                  alt={activeData.alt} 
                   loading="lazy"
                   className="w-full h-full object-cover"
                 />

@@ -8,15 +8,15 @@ import portCasement from '../../assets/port_casement_1775634121268.png';
 import portCurtain from '../../assets/port_curtain_1775634151275.png';
 import portCustom from '../../assets/port_custom_1775634174124.png';
 
-interface Project { title: string; type: string; dims: string; image: string; span: string; }
+interface Project { title: string; type: string; dims: string; image: string; span: string; alt: string; }
 
 const PROJECTS: Project[] = [
-  { title: 'Modern Living Room', type: 'Premium Sliding Windows', dims: 'Clear Ambience', image: portSliding, span: 'col-span-1 md:col-span-2 lg:col-span-2 row-span-1 md:row-span-2' },
-  { title: 'Luxury Patio Connect', type: 'Bifold Folding Doors', dims: 'Outdoor Integration', image: portFolding, span: 'col-span-1 md:col-span-1 lg:col-span-1 row-span-1' },
-  { title: 'Corporate Boardroom', type: 'Glass & Aluminium Partition', dims: 'Sound Proofed', image: portOffice, span: 'col-span-1 md:col-span-1 lg:col-span-1 row-span-1' },
-  { title: 'Minimalist Bedroom', type: 'Casement Window', dims: 'Modern Ventilation', image: portCasement, span: 'col-span-1 md:col-span-1 lg:col-span-1 row-span-1' },
-  { title: 'Luxury Double-Story', type: 'Structural Curtain Wall', dims: 'Maximum Light', image: portCurtain, span: 'col-span-1 md:col-span-1 lg:col-span-2 row-span-1' },
-  { title: 'Architectural Details', type: 'Custom Decorative Grill', dims: 'Precision Cut', image: portCustom, span: 'col-span-1 md:col-span-2 lg:col-span-3 row-span-1' },
+  { title: 'Modern Living Room', type: 'Premium Sliding Windows', dims: 'Clear Ambience', image: portSliding, span: 'col-span-1 md:col-span-2 lg:col-span-2 row-span-1 md:row-span-2', alt: 'Premium Aluminium Sliding Windows installation for living room in Indore' },
+  { title: 'Luxury Patio Connect', type: 'Bifold Folding Doors', dims: 'Outdoor Integration', image: portFolding, span: 'col-span-1 md:col-span-1 lg:col-span-1 row-span-1', alt: 'Aluminium Bifold Folding Doors connecting patio and living space in Indore' },
+  { title: 'Corporate Boardroom', type: 'Glass & Aluminium Partition', dims: 'Sound Proofed', image: portOffice, span: 'col-span-1 md:col-span-1 lg:col-span-1 row-span-1', alt: 'Custom Office Cabin and glass aluminium partition work in Indore' },
+  { title: 'Minimalist Bedroom', type: 'Casement Window', dims: 'Modern Ventilation', image: portCasement, span: 'col-span-1 md:col-span-1 lg:col-span-1 row-span-1', alt: 'Aluminium openable casement windows for modern bedroom in Indore' },
+  { title: 'Luxury Double-Story', type: 'Structural Curtain Wall', dims: 'Maximum Light', image: portCurtain, span: 'col-span-1 md:col-span-1 lg:col-span-2 row-span-1', alt: 'Structural glazing and curtain wall aluminium fabrication project in Indore' },
+  { title: 'Architectural Details', type: 'Custom Decorative Grill', dims: 'Precision Cut', image: portCustom, span: 'col-span-1 md:col-span-2 lg:col-span-3 row-span-1', alt: 'Custom decorative aluminium fabrication and partition work in Indore' },
 ];
 
 export default function Portfolio() {
@@ -29,7 +29,7 @@ export default function Portfolio() {
           {PROJECTS.map((proj) => (
             <ScrollReveal key={proj.title} delay={0} className={`${proj.span} w-full h-full`}>
               <motion.div className="relative group w-full h-full rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-shadow duration-500" whileHover={{ scale: 1.015 }} transition={{ duration: 0.4 }}>
-                <img src={proj.image} alt={proj.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                <img src={proj.image} alt={proj.alt} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
                 
                 {/* Gradient overlay gets stronger on hover to highlight text */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />

@@ -70,10 +70,13 @@ export default function Hero({ isReady = true }: HeroProps) {
             style={{ y: yText, opacity: opacityText }}
             className="max-w-3xl pointer-events-auto"
           >
-            <h1 className="text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[7rem] font-extrabold font-heading tracking-[-0.03em] text-white leading-[1.03]">
+            <h1 className="sr-only">
+              Top Aluminium Fabricators in Indore | Sliding & Openable Windows (2 Track, 3 Track), Office Doors, Partitions, Office Cabins, & Kitchen Profile Work
+            </h1>
+            <div aria-hidden="true" className="text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[7rem] font-extrabold font-heading tracking-[-0.03em] text-white leading-[1.03]">
               Architectural <br />
               <span className="text-white/95">Mastery.</span>
-            </h1>
+            </div>
             <p className="text-sm md:text-lg text-white/80 max-w-xl mt-6 lg:mt-8 leading-relaxed font-medium">
               The all-in-one partner that simplifies your architectural journey — 
               from custom structural framing to precise frameless execution.
@@ -168,7 +171,7 @@ export default function Hero({ isReady = true }: HeroProps) {
                <div className="flex -space-x-3">
                   <div className="w-10 h-10 rounded-full border-2 border-[#FAF9F6] bg-[#00288E] flex items-center justify-center text-[10px] font-bold text-white z-20 shadow-md">15+</div>
                   <div className="w-10 h-10 rounded-full border-2 border-[#FAF9F6] bg-gray-200 z-10 overflow-hidden shadow-md">
-                     <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=100&h=100" />
+                     <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=100&h=100" alt="Verified customer of Raj Alluminiums in Indore" />
                   </div>
                   <div className="w-10 h-10 rounded-full border-2 border-[#FAF9F6] bg-black z-0 flex items-center justify-center shadow-md">
                      <FiArrowRight className="text-white" />
