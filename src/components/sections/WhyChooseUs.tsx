@@ -59,7 +59,7 @@ const USPS: USP[] = [
 
 export default function WhyChooseUs() {
   return (
-    <section id="advantages" className="relative overflow-hidden bg-[#FAF9F6] py-24 md:py-32 selection:bg-[#00288E] selection:text-white">
+    <section id="advantages" className="relative overflow-hidden bg-base py-24 md:py-32 selection:bg-primary selection:text-white">
       
       {/* Background Architectural Blueprint Traces */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden mix-blend-multiply opacity-20">
@@ -117,7 +117,7 @@ export default function WhyChooseUs() {
                   
                   {/* Top Header / Icon Area */}
                   <div className={`flex ${isLargeOrWide && !usp.bentoClass.includes('flex-row') ? 'items-start justify-between w-full mb-8' : 'w-full mb-5'} ${usp.bentoClass.includes('flex-row') && 'w-auto mb-0'}`}>
-                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br from-[#F4F3F1] to-white border border-[#C4C5D5]/50 shadow-[inset_0_2px_10px_rgba(255,255,255,1)] text-[#00288E] group-hover:scale-110 group-hover:bg-[#00288E] group-hover:text-white transition-all duration-500">
+                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br from-[#F4F3F1] to-white border border-[#C4C5D5]/50 shadow-[inset_0_2px_10px_rgba(255,255,255,1)] text-[#00288E] group-hover:scale-110 group-hover:from-[#00288E] group-hover:to-[#00288E] group-hover:text-white transition-all duration-500">
                       {usp.icon}
                     </div>
 
@@ -130,10 +130,10 @@ export default function WhyChooseUs() {
                   
                   {/* Content Typography */}
                   <div className={`${usp.bentoClass.includes('flex-row') ? 'flex-1' : ''}`}>
-                    <h3 className={`${isLargeOrWide && !usp.bentoClass.includes('flex-row') ? 'text-2xl md:text-3xl' : 'text-xl'} font-black font-heading text-[#1A1C1A] mb-3 group-hover:text-[#00288E] transition-colors duration-300 tracking-tight leading-[1.1]`}>
+                    <h3 className={`${isLargeOrWide && !usp.bentoClass.includes('flex-row') ? 'text-2xl md:text-3xl' : 'text-xl'} font-black font-heading mb-3 group-hover:text-primary transition-colors duration-300 tracking-tight leading-[1.1]`} style={{ color: '#1A1C1A' }}>
                       {usp.title}
                     </h3>
-                    <p className={`text-[#444653] leading-relaxed ${isLargeOrWide && !usp.bentoClass.includes('flex-row') ? 'text-base max-w-sm' : 'text-sm'}`}>
+                    <p className={`leading-relaxed font-medium ${isLargeOrWide && !usp.bentoClass.includes('flex-row') ? 'text-base max-w-sm' : 'text-sm'}`} style={{ color: '#444653' }}>
                       {usp.description}
                     </p>
                   </div>

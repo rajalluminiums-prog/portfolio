@@ -17,6 +17,11 @@
 @theme {
   --font-heading: "Outfit", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
+  --color-primary: #00288E;
+  --color-ink: #1A1C1A;
+  --color-base: #FAF9F6;
+  --color-muted: #C4C5D5;
+  --color-text-muted: #444653;
 }
 
 /* ──────────────────

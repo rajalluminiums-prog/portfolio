@@ -27,11 +27,11 @@ export default function SectionHeading({
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] as const }}
     >
       {badge && <Badge>{badge}</Badge>}
-      <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold font-heading tracking-tight text-slate-900">
+      <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold font-heading tracking-tight text-ink">
         {title}
       </h2>
       {subtitle && (
-        <p className="text-slate-500 text-base md:text-lg max-w-2xl leading-relaxed">
+        <p className="text-text-muted text-base md:text-lg max-w-2xl leading-relaxed">
           {subtitle}
         </p>
       )}

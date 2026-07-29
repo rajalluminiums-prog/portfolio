@@ -15,25 +15,10 @@ const SIZE_CLASSES = {
   lg: 'px-9 py-4 text-lg rounded-2xl gap-2.5',
 };
 
-const VARIANT_STYLES: Record<string, React.CSSProperties> = {
-  primary: {
-    backgroundColor: '#00288E',
-    color: '#FFFFFF',
-    border: 'none',
-    boxShadow: '0 4px 14px rgba(59, 130, 246, 0.35)',
-  },
-  outline: {
-    backgroundColor: 'transparent',
-    color: '#00288E',
-    border: '2px solid #00288E',
-    boxShadow: 'none',
-  },
-  ghost: {
-    backgroundColor: 'transparent',
-    color: '#00288E',
-    border: 'none',
-    boxShadow: 'none',
-  },
+const VARIANT_CLASSES: Record<string, string> = {
+  primary: 'bg-primary text-white border-none shadow-[0_4px_14px_rgba(59,130,246,0.35)]',
+  outline: 'bg-transparent text-primary border-2 border-primary shadow-none',
+  ghost: 'bg-transparent text-primary border-none shadow-none hover:bg-primary/5',
 };
 
 export default function Button({
@@ -42,13 +27,11 @@ export default function Button({
   size = 'md',
   icon,
   className = '',
-  style,
   ...props
 }: ButtonProps) {
   return (
     <motion.button
-      className={`inline-flex items-center justify-center font-heading font-semibold cursor-pointer ${SIZE_CLASSES[size]} ${className}`}
-      style={{ ...VARIANT_STYLES[variant], ...style }}
+      className={`inline-flex items-center justify-center font-heading font-semibold cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${SIZE_CLASSES[size]} ${VARIANT_CLASSES[variant]} ${className}`}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
       {...props}

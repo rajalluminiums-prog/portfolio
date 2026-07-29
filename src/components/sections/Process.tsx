@@ -45,7 +45,7 @@ export default function Process() {
   });
 
   return (
-    <section id="process" className="relative py-24 md:py-32 bg-[#FAF9F6]">
+    <section id="process" className="relative py-24 md:py-32 bg-base">
       <SectionHeading 
         badge="METHODOLOGY" 
         title="Our Process" 
@@ -108,11 +108,11 @@ export default function Process() {
                          {step.detail}
                        </span>
                        
-                       <h3 className="text-2xl md:text-3xl font-heading font-bold text-[#1A1C1A] mb-4 leading-tight">
+                       <h3 className="text-2xl md:text-3xl font-heading font-bold mb-4 leading-tight" style={{ color: '#1A1C1A' }}>
                          {step.title}
                        </h3>
                        
-                       <p className="text-[#444653] font-medium leading-relaxed text-sm md:text-base">
+                       <p className="font-medium leading-relaxed text-sm md:text-base" style={{ color: '#444653' }}>
                          {step.description}
                        </p>
                     </div>

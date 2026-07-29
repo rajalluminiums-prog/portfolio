@@ -3,7 +3,7 @@ import ScrollFillText from '../ui/ScrollFillText';
 
 export default function About() {
   return (
-    <section id="about" className="py-32 relative bg-white">
+    <section id="about" className="py-24 md:py-32 relative bg-white">
       {/* Subtle top noise border */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#C4C5D5]/30 to-transparent" />
       
@@ -30,7 +30,7 @@ export default function About() {
              <span className="text-sm font-bold tracking-widest text-[#444653] uppercase mt-2">Years Trusted</span>
            </div>
            <div className="border border-[#C4C5D5]/20 rounded-3xl p-10 flex flex-col items-center justify-center bg-[#FAF9F6] shadow-sm hover:-translate-y-2 transition-transform duration-500">
-             <span className="text-4xl md:text-5xl font-heading font-bold text-[#00288E]">1000+</span>
+             <span className="text-4xl md:text-5xl font-heading font-bold text-[#00288E]">100K+</span>
              <span className="text-sm font-bold tracking-widest text-[#444653] uppercase mt-2">Projects Finished</span>
            </div>
            <div className="border border-[#C4C5D5]/20 rounded-3xl p-10 flex flex-col items-center justify-center bg-[#FAF9F6] shadow-sm hover:-translate-y-2 transition-transform duration-500">

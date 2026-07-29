@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
-import { FiShield, FiMaximize, FiLayers } from 'react-icons/fi';
+import { FiShield, FiMaximize, FiLayers, FiChevronDown } from 'react-icons/fi';
 import SectionHeading from '../ui/SectionHeading';
 
 import portfolioBg1 from '../../assets/hero.png';
@@ -76,10 +76,10 @@ export default function Services() {
       </div>
 
       {/* Sticky Checkpoint (Using 100svh to prevent mobile URL bar resize shaking) */}
-      <div className="sticky top-0 h-[100svh] w-full flex flex-col items-center justify-center p-4 md:px-8 pt-[10vh] sm:pt-[12vh] md:pt-[90px] lg:pt-[110px] pb-[4vh] overflow-hidden">
+      <div className="sticky top-0 h-[100svh] w-full flex flex-col items-center justify-center p-4 md:px-8 pt-[80px] md:pt-[90px] pb-[60px] md:pb-[70px] overflow-hidden">
         
         {/* Dynamic header placement, sitting above naturally (Hidden on Mobile) */}
-        <div className="hidden md:flex w-full max-w-[1400px] flex-shrink-0 mb-6 lg:mb-10 text-center flex-col items-center z-10">
+        <div className="hidden md:flex w-full max-w-[1400px] flex-shrink-0 mb-4 lg:mb-6 text-center flex-col items-center z-10">
           <SectionHeading
             badge="OUR EXPERTISE"
             title="What We Build"
@@ -123,7 +123,7 @@ export default function Services() {
                         <activeData.icon size={18} />
                      </div>
                      <div>
-                       <p className="text-[9px] md:text-[10px] text-[#444653] font-bold tracking-widest uppercase">Specialty</p>
+                       <p className="text-[9px] md:text-[10px] font-bold tracking-widest uppercase" style={{ color: '#444653' }}>Specialty</p>
                        <p className="text-xs md:text-sm font-bold text-[#1A1C1A]">{activeData.floatingText1}</p>
                      </div>
                   </motion.div>
@@ -204,7 +204,8 @@ export default function Services() {
                         hidden: { opacity: 0, x: -10 },
                         visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } }
                       }}
-                      className="text-sm sm:text-base text-[#444653] leading-relaxed font-medium max-w-md"
+                      className="text-sm sm:text-base leading-relaxed font-medium max-w-md"
+                      style={{ color: '#444653' }}
                     >
                       {activeData.description}
                     </motion.p>
@@ -216,12 +217,34 @@ export default function Services() {
             <div className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 flex items-end gap-1 sm:gap-2 font-heading font-bold z-20">
                <span className="text-2xl sm:text-3xl text-[#00288E] leading-none">0{activeSlide + 1}</span>
                <span className="text-lg sm:text-xl text-[#C4C5D5] leading-none">/</span>
-               <span className="text-sm sm:text-base text-[#444653]/60 mb-0.5 sm:mb-1 leading-none">0{SERVICES.length}</span>
+               <span className="text-sm sm:text-base mb-0.5 sm:mb-1 leading-none" style={{ color: 'rgba(68, 70, 83, 0.6)' }}>0{SERVICES.length}</span>
             </div>
 
           </div>
 
         </div>
+
+        {/* Global Scroll Hint Indicator (Page Level) */}
+        <AnimatePresence>
+          {activeSlide === 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: 0.3 } }}
+              transition={{ delay: 1.4, duration: 0.8 }}
+              viewport={{ once: true }}
+              className="absolute bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 z-20 pointer-events-none"
+            >
+              <span className="text-[10px] font-bold tracking-widest uppercase text-[#00288E]">Keep Scrolling</span>
+              <div className="flex flex-col items-center -space-y-2 text-[#00288E]">
+                <motion.div animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0 }}><FiChevronDown size={18} /></motion.div>
+                <motion.div animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0.2 }}><FiChevronDown size={18} /></motion.div>
+                <motion.div animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0.4 }}><FiChevronDown size={18} /></motion.div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
       </div>
     </section>
   );

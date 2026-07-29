@@ -6,11 +6,11 @@ interface BadgeProps {
   className?: string;
 }
 
-const VARIANT_STYLES: Record<string, React.CSSProperties> = {
-  primary: { backgroundColor: 'rgba(0,40,142,0.1)', color: '#00288E' },
-  accent: { backgroundColor: 'rgba(26,28,26,0.1)', color: '#1A1C1A' },
-  outline: { border: '1px solid #C4C5D5', color: '#444653', backgroundColor: 'transparent' },
-  muted: { backgroundColor: '#F4F3F1', color: '#444653' },
+const VARIANT_CLASSES: Record<string, string> = {
+  primary: 'bg-primary/10 text-primary',
+  accent: 'bg-ink/10 text-ink',
+  outline: 'border border-muted text-text-muted bg-transparent',
+  muted: 'bg-[#F4F3F1] text-text-muted',
 };
 
 export default function Badge({
@@ -20,8 +20,7 @@ export default function Badge({
 }: BadgeProps) {
   return (
     <span
-      className={`inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold font-heading tracking-wide uppercase ${className}`}
-      style={VARIANT_STYLES[variant]}
+      className={`inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold font-heading tracking-wide uppercase ${VARIANT_CLASSES[variant]} ${className}`}
     >
       {children}
     </span>

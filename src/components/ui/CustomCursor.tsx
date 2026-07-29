@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 export default function CustomCursor() {
   const [isHovered, setIsHovered] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -11,6 +12,12 @@ export default function CustomCursor() {
   const springY = useSpring(mouseY, { damping: 25, stiffness: 300, mass: 0.5 });
 
   useEffect(() => {
+    // Check if device supports touch
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+      setIsTouchDevice(true);
+      return; // Skip adding mouse listeners for touch devices
+    }
+
     const manageMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX - 16); // Center cursor
       mouseY.set(e.clientY - 16);
@@ -41,9 +48,11 @@ export default function CustomCursor() {
     };
   }, [mouseX, mouseY]);
 
+  if (isTouchDevice) return null;
+
   return (
     <motion.div
-      className="fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-[9999] flex items-center justify-center"
+      className="fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-[9999] flex items-center justify-center hidden md:flex"
       style={{
         x: springX,
         y: springY,

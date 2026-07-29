@@ -40,7 +40,7 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const handleNavClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleNavClick = useCallback((e: React.MouseEvent<HTMLElement>, href: string) => {
     e.preventDefault();
     setActiveHash(href);
     setMobileOpen(false);
@@ -117,7 +117,7 @@ export default function Navbar() {
 
           {/* CTA + Mobile Toggle */}
           <div className="flex items-center gap-3">
-            <Button size="sm" className="hidden md:flex">Get Quote</Button>
+            <Button size="sm" className="hidden md:flex" onClick={(e) => handleNavClick(e, '#quote')}>Get Quote</Button>
             <button
               className={`lg:hidden p-2 transition-colors ${scrolled ? 'text-[#1A1C1A]' : 'text-white'}`}
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -155,7 +155,7 @@ export default function Navbar() {
                 {link.label}
               </motion.a>
             ))}
-            <Button className="mt-4" onClick={() => setMobileOpen(false)}>Get Quote</Button>
+            <Button className="mt-4" onClick={(e) => handleNavClick(e, '#quote')}>Get Quote</Button>
           </motion.div>
         )}
       </AnimatePresence>

@@ -1,39 +1,23 @@
-import Navbar from './components/layout/Navbar'
-import Footer from './components/layout/Footer'
-import Hero from './components/sections/Hero'
-import About from './components/sections/About'
-import Services from './components/sections/Services'
-import Portfolio from './components/sections/Portfolio'
-import Materials from './components/sections/Materials'
-import WhyChooseUs from './components/sections/WhyChooseUs'
-import Testimonials from './components/sections/Testimonials'
-import Process from './components/sections/Process'
-import Contact from './components/sections/Contact'
-
-import CustomCursor from './components/ui/CustomCursor'
-import SmoothScroll from './components/layout/SmoothScroll'
-import WhatsAppButton from './components/ui/WhatsAppButton'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import PublicLayout from './components/layout/PublicLayout';
+import AdminLayout from './components/layout/AdminLayout';
+import LandingPage from './pages/public/LandingPage';
+import PricingManager from './pages/admin/PricingManager';
 
 export default function App() {
   return (
-    <SmoothScroll>
-      <div className="min-h-screen bg-base max-w-[100vw] overflow-x-clip" style={{ cursor: 'none' }}>
-        <CustomCursor />
-        <Navbar />
-        <main>
-        <Hero />
-        <About />
-        <Services />
-        <Portfolio />
-        <Materials />
-        <WhyChooseUs />
-        <Testimonials />
-        <Process />
-        <Contact />
-      </main>
-      <Footer />
-      <WhatsAppButton />
-      </div>
-    </SmoothScroll>
-  )
+    <BrowserRouter>
+      <Routes>
+        {/* Public Routes */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<LandingPage />} />
+        </Route>
+
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<PricingManager />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }

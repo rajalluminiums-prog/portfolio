@@ -4,6 +4,7 @@ import GlassCard from '../ui/GlassCard';
 import SectionHeading from '../ui/SectionHeading';
 import Button from '../ui/Button';
 import ScrollReveal from '../ui/ScrollReveal';
+import { Input, Textarea, Select } from '../ui/Input';
 import { HiOutlineLocationMarker, HiOutlinePhone, HiOutlineMail, HiOutlineClock } from 'react-icons/hi';
 import { FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 
@@ -56,10 +57,9 @@ export default function Contact() {
     }
   };
 
-  const inputStyle: React.CSSProperties = { backgroundColor: '#FFFFFF', color: '#1A1C1A', border: '1px solid transparent', borderRadius: '0.75rem', padding: '0.75rem 1rem', fontSize: '0.875rem', outline: 'none', width: '100%', transition: 'border-color 0.2s', boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.03)' };
 
   return (
-    <section id="contact" className="relative overflow-hidden" style={{ padding: '5rem 0', backgroundColor: '#FAF9F6' }}>
+    <section id="contact" className="relative overflow-hidden py-24 md:py-32 bg-base">
       <div className="section-container relative z-10">
         <SectionHeading badge="Get in Touch" title="Let's Build Together" subtitle="Have a project in mind? Drop us a message and we'll get back to you within 24 hours." />
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
@@ -67,36 +67,19 @@ export default function Contact() {
             <GlassCard variant="strong" className="p-8 md:p-10">
               {submitted ? (
                 <motion.div className="flex flex-col items-center justify-center py-12 text-center" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl mb-4" style={{ backgroundColor: 'rgba(22,163,74,0.1)', color: '#16A34A' }}>✓</div>
-                  <h3 className="text-xl font-bold font-heading" style={{ color: '#1A1C1A' }}>Message Sent!</h3>
-                  <p className="text-sm mt-2" style={{ color: '#444653' }}>We'll get back to you within 24 hours.</p>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl mb-4 bg-green-600/10 text-green-600">✓</div>
+                  <h3 className="text-xl font-bold font-heading text-ink">Message Sent!</h3>
+                  <p className="text-sm mt-2 text-text-muted">We'll get back to you within 24 hours.</p>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-xs font-bold uppercase tracking-wider mb-1.5 block" style={{ color: '#444653' }}>Full Name</label>
-                      <input type="text" required style={inputStyle} placeholder="Your name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} onFocus={(e) => e.target.style.borderColor = '#00288E'} onBlur={(e) => e.target.style.borderColor = 'transparent'} />
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold uppercase tracking-wider mb-1.5 block" style={{ color: '#444653' }}>Phone</label>
-                      <input type="tel" required style={inputStyle} placeholder="+91 9876543210" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} onFocus={(e) => e.target.style.borderColor = '#00288E'} onBlur={(e) => e.target.style.borderColor = 'transparent'} />
-                    </div>
+                    <Input label="Full Name" type="text" required placeholder="Your name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                    <Input label="Phone" type="tel" required placeholder="+91 9876543210" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
                   </div>
-                  <div>
-                    <label className="text-xs font-bold uppercase tracking-wider mb-1.5 block" style={{ color: '#444653' }}>Email</label>
-                    <input type="email" style={inputStyle} placeholder="you@email.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} onFocus={(e) => e.target.style.borderColor = '#00288E'} onBlur={(e) => e.target.style.borderColor = 'transparent'} />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold uppercase tracking-wider mb-1.5 block" style={{ color: '#444653' }}>Project Type</label>
-                    <select style={inputStyle} value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
-                      {PROJECT_TYPES.map((t) => <option key={t} value={t === PROJECT_TYPES[0] ? '' : t}>{t}</option>)}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold uppercase tracking-wider mb-1.5 block" style={{ color: '#444653' }}>Message</label>
-                    <textarea rows={4} style={inputStyle} placeholder="Tell us about your project..." value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} onFocus={(e) => e.target.style.borderColor = '#00288E'} onBlur={(e) => e.target.style.borderColor = 'transparent'} />
-                  </div>
+                  <Input label="Email" type="email" placeholder="you@email.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                  <Select label="Project Type" options={PROJECT_TYPES} value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} />
+                  <Textarea label="Message" rows={4} placeholder="Tell us about your project..." value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
                   <Button className="w-full" size="lg" type="submit" disabled={isSubmitting}>
                     {isSubmitting ? 'Sending...' : 'Send Message'}
                   </Button>
@@ -107,28 +90,28 @@ export default function Contact() {
           <ScrollReveal className="lg:col-span-2 h-full" direction="right">
             <div className="space-y-5 h-full flex flex-col">
               <GlassCard className="p-7">
-                <h4 className="font-heading font-bold text-sm uppercase tracking-wider mb-5" style={{ color: '#1A1C1A' }}>Contact Information</h4>
+                <h4 className="font-heading font-bold text-sm uppercase tracking-wider mb-5 text-ink">Contact Information</h4>
                 <address className="space-y-4 not-italic">
                   {CONTACT_INFO.map((item) => (
                     <div key={item.label} className="flex items-start gap-3">
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(0,40,142,0.06)', color: '#00288E' }}>{item.icon}</div>
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-primary/10 text-primary">{item.icon}</div>
                       <div>
-                        <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#444653' }}>{item.label}</p>
-                        <p className="text-sm font-medium mt-0.5" style={{ color: '#1A1C1A' }}>{item.value}</p>
+                        <p className="text-xs font-bold uppercase tracking-wider text-text-muted">{item.label}</p>
+                        <p className="text-sm font-medium mt-0.5 text-ink">{item.value}</p>
                       </div>
                     </div>
                   ))}
                 </address>
               </GlassCard>
               <GlassCard className="p-7">
-                <h4 className="font-heading font-bold text-sm uppercase tracking-wider mb-4" style={{ color: '#1A1C1A' }}>Follow Us</h4>
+                <h4 className="font-heading font-bold text-sm uppercase tracking-wider mb-4 text-ink">Follow Us</h4>
                 <div className="flex gap-3">
                   {[
                     { icon: <FaFacebookF />, l: 'Facebook', href: '#' }, 
                     { icon: <FaInstagram />, l: 'Instagram', href: '#' }, 
                     { icon: <FaWhatsapp />, l: 'WhatsApp', isSocial: true, href: 'https://wa.me/918602379396' }
                   ].map((s) => (
-                    <a key={s.l} href={s.href} target={s.href !== '#' ? '_blank' : undefined} rel="noopener noreferrer" className="w-11 h-11 rounded-xl flex items-center justify-center transition-colors" style={s.isSocial ? { backgroundColor: 'rgba(37,211,102,0.1)', color: '#25D366' } : { backgroundColor: 'rgba(0,40,142,0.06)', color: '#00288E' }} aria-label={s.l}>{s.icon}</a>
+                    <a key={s.l} href={s.href} target={s.href !== '#' ? '_blank' : undefined} rel="noopener noreferrer" className={`w-11 h-11 rounded-xl flex items-center justify-center transition-colors ${s.isSocial ? 'bg-green-500/10 text-green-500' : 'bg-primary/10 text-primary'}`} aria-label={s.l}>{s.icon}</a>
                   ))}
                 </div>
               </GlassCard>
