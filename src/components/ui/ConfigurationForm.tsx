@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutGrid, DoorOpen, Columns3, Maximize } from 'lucide-react';
 
-export type CategoryType = 'Window' | 'Door' | 'Partition' | 'Fix' | 'Profile' | '';
+export type CategoryType = 'Window' | 'Door' | 'Partition' | 'Fix' | 'Profile' | 'Windows' | 'Doors' | 'Partitions' | 'Profiles' | 'Cabins' | 'Custom' | 'Tuffan' | '';
 
 export interface QuoteDimensions {
   widthFeet: number;
