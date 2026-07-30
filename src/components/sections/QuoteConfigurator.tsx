@@ -9,7 +9,7 @@ import api from '../../api';
 
 export default function QuoteConfigurator() {
   const [specs, setSpecs] = useState<{ category: CategoryType, attributes: Record<string, string>, dimensions: QuoteDimensions } | null>(null);
-  const [quoteResult, setQuoteResult] = useState<{ areaSqFt: number, pricePerSqFt: number, estimatedTotal: number } | null>(null);
+  const [quoteResult, setQuoteResult] = useState<{ areaSqFt: number, pricePerSqFt: number, estimatedTotal: number, pricingType?: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -87,10 +87,17 @@ export default function QuoteConfigurator() {
                   <p className="font-semibold text-ink">{quoteResult.areaSqFt} <span className="text-sm font-normal text-text-muted">sq ft</span></p>
                 </div>
               </div>
-              <div className="flex justify-between items-center text-sm font-medium text-text-muted">
-                <p>Based on exact dimensions</p>
-                <p className="bg-base px-3 py-1 rounded-full text-xs font-bold text-ink">₹{quoteResult.pricePerSqFt}/sqft</p>
-              </div>
+              
+              {quoteResult.pricingType === 'Fixed' ? (
+                <div className="flex justify-between items-center text-sm font-medium text-amber-600 bg-amber-50 px-3 py-2 rounded-lg border border-amber-100">
+                  <p>Fixed rate applied due to minimum size constraints.</p>
+                </div>
+              ) : (
+                <div className="flex justify-between items-center text-sm font-medium text-text-muted">
+                  <p>Based on exact dimensions</p>
+                  <p className="bg-base px-3 py-1 rounded-full text-xs font-bold text-ink">₹{quoteResult.pricePerSqFt}/sqft</p>
+                </div>
+              )}
             </div>
           ) : null}
         </motion.div>

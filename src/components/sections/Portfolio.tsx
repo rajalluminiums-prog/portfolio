@@ -114,8 +114,19 @@ export default function Portfolio() {
         {/* Dynamic Bento Grid */}
         <div className="min-h-[600px] relative">
           {loading && allProjects.length === 0 ? (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 auto-rows-[280px] md:auto-rows-[300px] lg:auto-rows-[340px] grid-flow-row-dense">
+              {['col-span-1 md:col-span-2 lg:col-span-2 row-span-2', 'col-span-1 row-span-2', 'col-span-1 md:col-span-2 row-span-1', 'col-span-1 row-span-1', 'col-span-1 row-span-1', 'col-span-1 md:col-span-2 row-span-1'].map((spanClass, i) => (
+                <div key={i} className={`relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden bg-ink/5 animate-pulse ${spanClass}`}>
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/10 to-transparent" />
+                  <div className="absolute bottom-6 md:bottom-8 left-6 md:left-8 right-6 md:right-8">
+                    <div className="h-6 md:h-8 bg-ink/10 rounded-md w-2/3 mb-4" />
+                    <div className="flex gap-2">
+                      <div className="h-6 w-20 bg-ink/10 rounded-full" />
+                      <div className="h-6 w-24 bg-ink/10 rounded-full" />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
             <>

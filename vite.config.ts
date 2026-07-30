@@ -7,6 +7,9 @@ export default defineConfig({
     tailwindcss(),
     react(),
   ],
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+  },
   build: {
     rollupOptions: {
       output: {

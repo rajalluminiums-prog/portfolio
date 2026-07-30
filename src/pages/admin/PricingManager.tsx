@@ -1,36 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiPlus, FiTrash2, FiSettings, FiGrid, FiTrendingUp, FiEdit2, FiX } from 'react-icons/fi';
 import type { CategoryType } from '../../components/ui/ConfigurationForm';
 import api from '../../api';
+
 interface Rate {
   _id: string;
   category: CategoryType;
   attributes: Record<string, string>;
   pricePerSqFt: number;
+  minStandardSqft?: number;
+  fixedPriceUnderStandard?: number;
   isActive: boolean;
 }
 
 export default function PricingManager() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-  
   const [rates, setRates] = useState<Rate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   
   // New Rate Form State
-  const [category, setCategory] = useState<CategoryType>('Window');
+  const [category, setCategory] = useState<CategoryType>('Windows');
   const [attributes, setAttributes] = useState<Record<string, string>>({});
   const [price, setPrice] = useState('');
+  const [minStandardSqft, setMinStandardSqft] = useState('0');
+  const [fixedPriceUnderStandard, setFixedPriceUnderStandard] = useState('0');
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === 'admin123') { // Hardcoded for MVP as discussed
-      setIsAuthenticated(true);
-      fetchRates();
-    } else {
-      alert('Invalid Password');
-    }
-  };
+  useEffect(() => {
+    fetchRates();
+  }, []);
 
   const fetchRates = async () => {
     setIsLoading(true);
@@ -58,24 +57,51 @@ export default function PricingManager() {
 
     setIsSaving(true);
     try {
-      const res = await api.post('/api/rates', {
+      const payload = {
         category,
         attributes,
-        pricePerSqFt: Number(price)
-      });
+        pricePerSqFt: Number(price),
+        minStandardSqft: Number(minStandardSqft) || 0,
+        fixedPriceUnderStandard: Number(fixedPriceUnderStandard) || 0
+      };
+
+      let res;
+      if (editingId) {
+        res = await api.put(`/api/rates/${editingId}`, payload);
+      } else {
+        res = await api.post('/api/rates', payload);
+      }
+
       if (res.data.success) {
-        setCategory('Window');
-        setAttributes({});
-        setPrice('');
+        cancelEdit();
         fetchRates();
       } else {
         alert(res.data.error);
       }
     } catch (err) {
-      alert('Failed to save rate');
+      alert(editingId ? 'Failed to update rate' : 'Failed to save rate');
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const startEdit = (rate: Rate) => {
+    setEditingId(rate._id);
+    setCategory(rate.category);
+    setAttributes(rate.attributes);
+    setPrice(rate.pricePerSqFt.toString());
+    setMinStandardSqft((rate.minStandardSqft || 0).toString());
+    setFixedPriceUnderStandard((rate.fixedPriceUnderStandard || 0).toString());
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setCategory('Windows');
+    setAttributes({});
+    setPrice('');
+    setMinStandardSqft('0');
+    setFixedPriceUnderStandard('0');
   };
 
   const handleDelete = async (id: string) => {
@@ -97,149 +123,139 @@ export default function PricingManager() {
   };
 
   const getRequiredKeys = (cat: CategoryType) => {
-    if (cat === 'Window') return ['track', 'gauge'];
-    if (cat === 'Door') return ['material', 'sheetType', 'doorType'];
-    if (cat === 'Partition') return ['material', 'doorType'];
+    if (cat === 'Windows') return ['track', 'gauge'];
+    if (cat === 'Doors') return ['material', 'sheetType', 'doorType'];
+    if (cat === 'Partitions') return ['material', 'doorType'];
+    if (cat === 'Profiles' || cat === 'Tuffan') return ['type'];
     return [];
   };
 
   const renderAttributeSelects = () => {
+    const SelectWrapper = ({ label, value, onChange, options }: any) => (
+      <div>
+        <label className="block text-sm font-bold text-ink/70 mb-2">{label}</label>
+        <div className="relative">
+          <select 
+            value={value} 
+            onChange={onChange} 
+            className="w-full px-4 py-3 rounded-xl bg-ink/5 border-2 border-transparent focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium text-ink appearance-none cursor-pointer"
+          >
+            <option value="">Select {label}...</option>
+            {options.map((opt: string) => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+    );
+
     switch (category) {
-      case 'Window':
+      case 'Windows':
         return (
           <>
-            <div>
-              <label className="block text-sm font-semibold mb-1">Track</label>
-              <select value={attributes.track || ''} onChange={(e) => setAttributes(p => ({...p, track: e.target.value}))} className="w-full p-2 rounded border border-ink/10 bg-base outline-none">
-                <option value="">Select Track...</option>
-                <option value="2T">2T</option>
-                <option value="3T">3T</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold mb-1">Gauge / Material</label>
-              <select value={attributes.gauge || ''} onChange={(e) => setAttributes(p => ({...p, gauge: e.target.value}))} className="w-full p-2 rounded border border-ink/10 bg-base outline-none">
-                <option value="">Select Gauge...</option>
-                <option value="16G">16G</option>
-                <option value="18G">18G</option>
-                <option value="20G">20G</option>
-                <option value="60mm">60mm</option>
-                <option value="Domal">Domal</option>
-              </select>
-            </div>
+            <SelectWrapper label="Track" value={attributes.track || ''} onChange={(e: any) => setAttributes(p => ({...p, track: e.target.value}))} options={['2T', '3T']} />
+            <SelectWrapper label="Gauge / Material" value={attributes.gauge || ''} onChange={(e: any) => setAttributes(p => ({...p, gauge: e.target.value}))} options={['16G', '18G', '20G', '60mm', 'Domal']} />
           </>
         );
-      case 'Door':
+      case 'Doors':
         return (
           <>
-            <div>
-              <label className="block text-sm font-semibold mb-1">Material</label>
-              <select value={attributes.material || ''} onChange={(e) => setAttributes(p => ({...p, material: e.target.value}))} className="w-full p-2 rounded border border-ink/10 bg-base outline-none">
-                <option value="">Select Material...</option>
-                <option value="Heavy">Heavy</option>
-                <option value="Medium">Medium</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold mb-1">Sheet Type</label>
-              <select value={attributes.sheetType || ''} onChange={(e) => setAttributes(p => ({...p, sheetType: e.target.value}))} className="w-full p-2 rounded border border-ink/10 bg-base outline-none">
-                <option value="">Select Sheet Type...</option>
-                <option value="Plain">Plain</option>
-                <option value="Wooden">Wooden</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold mb-1">Door Type</label>
-              <select value={attributes.doorType || ''} onChange={(e) => setAttributes(p => ({...p, doorType: e.target.value}))} className="w-full p-2 rounded border border-ink/10 bg-base outline-none">
-                <option value="">Select Door Type...</option>
-                <option value="Sliding">Sliding</option>
-                <option value="Openable">Openable</option>
-              </select>
-            </div>
+            <SelectWrapper label="Material" value={attributes.material || ''} onChange={(e: any) => setAttributes(p => ({...p, material: e.target.value}))} options={['Heavy', 'Medium']} />
+            <SelectWrapper label="Sheet Type" value={attributes.sheetType || ''} onChange={(e: any) => setAttributes(p => ({...p, sheetType: e.target.value}))} options={['Plain', 'Wooden']} />
+            <SelectWrapper label="Door Type" value={attributes.doorType || ''} onChange={(e: any) => setAttributes(p => ({...p, doorType: e.target.value}))} options={['Sliding', 'Openable']} />
           </>
         );
-      case 'Partition':
+      case 'Partitions':
         return (
           <>
-            <div>
-              <label className="block text-sm font-semibold mb-1">Material</label>
-              <select value={attributes.material || ''} onChange={(e) => setAttributes(p => ({...p, material: e.target.value}))} className="w-full p-2 rounded border border-ink/10 bg-base outline-none">
-                <option value="">Select Material...</option>
-                <option value="Novapan">Novapan</option>
-                <option value="Glass">Glass</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold mb-1">Door Type</label>
-              <select value={attributes.doorType || ''} onChange={(e) => setAttributes(p => ({...p, doorType: e.target.value}))} className="w-full p-2 rounded border border-ink/10 bg-base outline-none">
-                <option value="">Select Door Type...</option>
-                <option value="Sliding">Sliding</option>
-                <option value="Openable">Openable</option>
-              </select>
-            </div>
+            <SelectWrapper label="Material" value={attributes.material || ''} onChange={(e: any) => setAttributes(p => ({...p, material: e.target.value}))} options={['Novapan', 'Glass']} />
+            <SelectWrapper label="Door Type" value={attributes.doorType || ''} onChange={(e: any) => setAttributes(p => ({...p, doorType: e.target.value}))} options={['Sliding', 'Openable']} />
           </>
+        );
+      case 'Profiles':
+      case 'Tuffan':
+        return (
+          <SelectWrapper label="Type" value={attributes.type || ''} onChange={(e: any) => setAttributes(p => ({...p, type: e.target.value}))} options={['10mm', '12mm']} />
         );
       default:
         return null;
     }
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <form onSubmit={handleLogin} className="bg-white p-8 rounded-2xl shadow-sm border border-ink/10 max-w-sm w-full">
-          <h2 className="text-2xl font-heading font-black mb-6 text-center">Admin Access</h2>
-          <input 
-            type="password" 
-            placeholder="Enter Admin Password" 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 mb-4 rounded border border-ink/10 bg-base focus:border-primary outline-none"
-          />
-          <button type="submit" className="w-full bg-ink text-white py-3 rounded font-bold hover:bg-ink/90 transition">
-            Login
-          </button>
-        </form>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <div className="flex justify-between items-center mb-8">
+    <div className="space-y-8">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-heading font-black">Pricing Configuration</h1>
-          <p className="text-text-muted mt-1">Manage dynamic rates for all product combinations.</p>
+          <h1 className="text-3xl sm:text-4xl font-heading font-black tracking-tighter flex items-center gap-3">
+            <span className="p-2.5 bg-primary/10 text-primary rounded-xl"><FiSettings className="text-2xl" /></span>
+            Pricing Engine
+          </h1>
+          <p className="text-ink/60 mt-2 font-medium">Configure dynamic rates and thresholds for all product matrices.</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
         
         {/* Create Form */}
-        <div className="lg:col-span-1">
-          <form onSubmit={handleAddRate} className="bg-white p-6 rounded-2xl shadow-sm border border-ink/5">
-            <h3 className="text-lg font-bold mb-4">Add New Rule</h3>
+        <div className="xl:col-span-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+            className={`p-6 sm:p-8 rounded-[2rem] shadow-sm border transition-all duration-300 sticky top-24 ${editingId ? 'bg-primary/5 border-primary/20' : 'bg-white border-ink/5'}`}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-black flex items-center gap-2 text-ink">
+                {editingId ? (
+                  <><FiEdit2 className="text-primary" /> Edit Rule</>
+                ) : (
+                  <><FiPlus className="text-primary" /> Add New Rule</>
+                )}
+              </h3>
+              {editingId && (
+                <button type="button" onClick={cancelEdit} className="text-sm font-bold text-ink/50 hover:text-ink transition-colors flex items-center gap-1">
+                  <FiX /> Cancel
+                </button>
+              )}
+            </div>
             
-            <div className="space-y-4">
+            <form onSubmit={handleAddRate} className="space-y-5">
               <div>
-                <label className="block text-sm font-semibold mb-1">Category</label>
-                <select 
-                  value={category} 
-                  onChange={handleCategoryChange}
-                  className="w-full p-2 rounded border border-ink/10 bg-base outline-none"
-                >
-                  <option value="Window">Window</option>
-                  <option value="Door">Door</option>
-                  <option value="Partition">Partition</option>
-                  <option value="Fix">Fix</option>
-                </select>
+                <label className="block text-sm font-bold text-ink/70 mb-2">Category</label>
+                <div className="relative">
+                  <select 
+                    value={category} 
+                    onChange={handleCategoryChange}
+                    className="w-full px-4 py-3 rounded-xl bg-ink/5 border-2 border-transparent focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium text-ink appearance-none cursor-pointer"
+                  >
+                    <option value="Windows">Windows</option>
+                    <option value="Doors">Doors</option>
+                    <option value="Partitions">Partitions</option>
+                    <option value="Profiles">Profiles</option>
+                    <option value="Cabins">Cabins</option>
+                    <option value="Custom">Custom</option>
+                    <option value="Tuffan">Tuffan</option>
+                    <option value="Fix">Fix</option>
+                  </select>
+                </div>
               </div>
 
               {/* Dynamic Attribute Selects */}
-              {renderAttributeSelects()}
+              <AnimatePresence mode="popLayout">
+                <motion.div 
+                  key={category}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-5"
+                >
+                  {renderAttributeSelects()}
+                </motion.div>
+              </AnimatePresence>
+
+              <hr className="border-ink/5 my-2" />
 
               <div>
-                <label className="block text-sm font-semibold mb-1">Price per sq ft (₹)</label>
+                <label className="block text-sm font-bold text-ink/70 mb-2 flex items-center gap-1"><FiTrendingUp /> Price per sq ft (₹)</label>
                 <input 
                   type="number"
                   value={price}
@@ -247,58 +263,127 @@ export default function PricingManager() {
                   placeholder="e.g. 250"
                   required
                   min="0"
-                  className="w-full p-2 rounded border border-ink/10 bg-base outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-ink/5 border-2 border-transparent focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium text-ink"
                 />
               </div>
 
-              <button type="submit" disabled={isSaving} className="w-full bg-primary text-white py-2 rounded font-bold hover:bg-primary/90 transition disabled:opacity-50">
-                {isSaving ? 'Saving...' : 'Save Rule'}
-              </button>
-            </div>
-          </form>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-bold text-ink/70 mb-2">Min Size (sqft)</label>
+                  <input 
+                    type="number"
+                    value={minStandardSqft}
+                    onChange={(e) => setMinStandardSqft(e.target.value)}
+                    placeholder="e.g. 9"
+                    min="0"
+                    className="w-full px-4 py-3 rounded-xl bg-ink/5 border-2 border-transparent focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium text-ink"
+                  />
+                  <p className="text-[10px] text-ink/50 mt-1.5 font-medium leading-tight">Threshold for flat pricing</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-ink/70 mb-2">Fixed Price (₹)</label>
+                  <input 
+                    type="number"
+                    value={fixedPriceUnderStandard}
+                    onChange={(e) => setFixedPriceUnderStandard(e.target.value)}
+                    placeholder="e.g. 1500"
+                    min="0"
+                    className="w-full px-4 py-3 rounded-xl bg-ink/5 border-2 border-transparent focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium text-ink"
+                  />
+                  <p className="text-[10px] text-ink/50 mt-1.5 font-medium leading-tight">Applied if under min size</p>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <button type="submit" disabled={isSaving} className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-primary-dark transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 text-base shadow-lg shadow-primary/20">
+                  {isSaving ? 'Saving...' : (editingId ? 'Update Rule' : 'Deploy Rule')}
+                </button>
+              </div>
+            </form>
+          </motion.div>
         </div>
 
         {/* Rates Table */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-2xl shadow-sm border border-ink/5 overflow-hidden">
+        <div className="xl:col-span-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}
+            className="bg-white rounded-[2rem] shadow-sm border border-ink/5 overflow-hidden"
+          >
+            <div className="p-6 border-b border-ink/5 flex items-center gap-2">
+              <FiGrid className="text-ink/40 text-xl" />
+              <h3 className="font-bold text-ink">Active Rules ({rates.length})</h3>
+            </div>
+            
             {isLoading ? (
-              <div className="p-8 text-center text-text-muted">Loading rates...</div>
+              <div className="p-12 text-center text-ink/50 font-medium">Loading rules matrix...</div>
             ) : rates.length === 0 ? (
-              <div className="p-8 text-center text-text-muted">No pricing rules configured yet.</div>
+              <div className="p-12 text-center text-ink/50 font-medium">No pricing rules configured. Create one to begin.</div>
             ) : (
-              <table className="w-full text-left text-sm">
-                <thead className="bg-base border-b border-ink/5 text-ink/60">
-                  <tr>
-                    <th className="p-4 font-semibold">Category</th>
-                    <th className="p-4 font-semibold">Attributes</th>
-                    <th className="p-4 font-semibold">Rate (/sq ft)</th>
-                    <th className="p-4 font-semibold text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-ink/5">
-                  {rates.map(rate => (
-                    <tr key={rate._id} className="hover:bg-base/50">
-                      <td className="p-4 font-medium">{rate.category}</td>
-                      <td className="p-4 font-mono text-xs text-ink/60 flex flex-wrap gap-1">
-                        {Object.entries(rate.attributes).map(([k, v]) => (
-                          <span key={k} className="bg-ink/5 px-2 py-1 rounded">{k}: {v}</span>
-                        ))}
-                      </td>
-                      <td className="p-4 font-bold text-primary">₹{rate.pricePerSqFt}</td>
-                      <td className="p-4 text-right">
-                        <button 
-                          onClick={() => handleDelete(rate._id)}
-                          className="text-red-500 hover:text-red-700 text-sm font-medium"
-                        >
-                          Delete
-                        </button>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm whitespace-nowrap">
+                  <thead className="bg-base/50 text-ink/50 text-xs uppercase tracking-wider font-bold">
+                    <tr>
+                      <th className="p-5">Category</th>
+                      <th className="p-5">Matrix Configuration</th>
+                      <th className="p-5">Base Rate</th>
+                      <th className="p-5 text-right">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-ink/5">
+                    <AnimatePresence>
+                      {rates.map((rate, i) => (
+                        <motion.tr 
+                          key={rate._id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                          transition={{ duration: 0.2, delay: i * 0.05 }}
+                          className={`transition-colors group ${editingId === rate._id ? 'bg-primary/5' : 'hover:bg-primary/5'}`}
+                        >
+                          <td className="p-5 font-bold text-ink">{rate.category}</td>
+                          <td className="p-5">
+                            <div className="flex flex-wrap gap-2">
+                              {Object.entries(rate.attributes).map(([k, v]) => (
+                                <span key={k} className="bg-ink/5 text-ink/70 px-2.5 py-1 rounded-md text-xs font-bold capitalize border border-ink/5">
+                                  {v}
+                                </span>
+                              ))}
+                            </div>
+                          </td>
+                          <td className="p-5">
+                            <div className="font-black text-primary text-base">₹{rate.pricePerSqFt}<span className="text-xs text-ink/40 font-normal">/sqft</span></div>
+                            {rate.minStandardSqft && rate.minStandardSqft > 0 ? (
+                              <div className="text-[10px] font-bold text-amber-600 mt-1 bg-amber-50 inline-block px-2 py-0.5 rounded border border-amber-100">
+                                Min: {rate.minStandardSqft} sqft → ₹{rate.fixedPriceUnderStandard}
+                              </div>
+                            ) : null}
+                          </td>
+                          <td className="p-5 text-right">
+                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button 
+                                onClick={() => startEdit(rate)}
+                                className="p-2 rounded-lg text-ink/30 hover:bg-ink/5 hover:text-ink transition-colors"
+                                title="Edit Rule"
+                              >
+                                <FiEdit2 className="text-lg" />
+                              </button>
+                              <button 
+                                onClick={() => handleDelete(rate._id)}
+                                className="p-2 rounded-lg text-ink/30 hover:bg-red-50 hover:text-red-500 transition-colors"
+                                title="Delete Rule"
+                              >
+                                <FiTrash2 className="text-lg" />
+                              </button>
+                            </div>
+                          </td>
+                        </motion.tr>
+                      ))}
+                    </AnimatePresence>
+                  </tbody>
+                </table>
+              </div>
             )}
-          </div>
+          </motion.div>
         </div>
 
       </div>

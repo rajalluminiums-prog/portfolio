@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { FiUploadCloud, FiTrash2, FiEye, FiEyeOff, FiEdit2, FiX, FiCheck, FiImage, FiZap } from 'react-icons/fi';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { FiUploadCloud, FiTrash2, FiEye, FiEyeOff, FiEdit2, FiX, FiCheck, FiImage, FiZap, FiSearch, FiFilter } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactCrop, { type Crop, type PixelCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
@@ -23,6 +23,10 @@ export default function GalleryManager() {
   const [uploading, setUploading] = useState(false);
   const [aiAnalyzing, setAiAnalyzing] = useState(false);
   const [error, setError] = useState('');
+
+  // Search & Filter State
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterCategory, setFilterCategory] = useState('All');
 
   // Drag & Drop State
   const [isDragging, setIsDragging] = useState(false);
@@ -49,7 +53,7 @@ export default function GalleryManager() {
 
   const fetchProjects = async () => {
     try {
-      const res = await api.get('/api/gallery?limit=100');
+      const res = await api.get('/api/gallery?limit=100&admin=true');
       if (res.data.success) {
         setProjects(res.data.data);
       }
@@ -59,6 +63,15 @@ export default function GalleryManager() {
       setLoading(false);
     }
   };
+
+  const filteredProjects = useMemo(() => {
+    return projects.filter((proj) => {
+      const matchesSearch = proj.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                            proj.type.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = filterCategory === 'All' || proj.category === filterCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [projects, searchTerm, filterCategory]);
 
   useEffect(() => {
     fetchProjects();
@@ -340,7 +353,7 @@ export default function GalleryManager() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`p-8 rounded-3xl shadow-sm border transition-all duration-300 ${editingId ? 'bg-primary/5 border-primary/20' : 'bg-white border-ink/5'}`}
+        className={`p-6 sm:p-10 rounded-[2rem] shadow-sm border transition-all duration-300 ${editingId ? 'bg-primary/5 border-primary/20' : 'bg-white border-ink/5'}`}
       >
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-black flex items-center gap-3">
@@ -498,64 +511,115 @@ export default function GalleryManager() {
       </motion.div>
 
       {/* Gallery Data Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-ink/5 overflow-hidden">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}
+        className="bg-white rounded-[2rem] shadow-sm border border-ink/5 overflow-hidden"
+      >
+        <div className="p-6 border-b border-ink/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <FiImage className="text-ink/40 text-xl" />
+            <h3 className="font-bold text-ink">Published Gallery ({filteredProjects.length})</h3>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="relative w-full sm:w-auto">
+              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-ink/40" />
+              <input 
+                type="text" 
+                placeholder="Search projects..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full sm:w-64 pl-10 pr-4 py-2 bg-ink/5 rounded-xl border border-transparent focus:border-primary focus:bg-white outline-none transition-all text-sm font-medium"
+              />
+            </div>
+            <div className="relative w-full sm:w-auto">
+              <FiFilter className="absolute left-3 top-1/2 -translate-y-1/2 text-ink/40" />
+              <select 
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
+                className="w-full sm:w-48 pl-10 pr-4 py-2 bg-ink/5 rounded-xl border border-transparent focus:border-primary focus:bg-white outline-none transition-all text-sm font-medium appearance-none cursor-pointer"
+              >
+                <option value="All">All Categories</option>
+                <option value="Windows">Windows</option>
+                <option value="Doors">Doors</option>
+                <option value="Partitions">Partitions</option>
+                <option value="Sliders">Sliders</option>
+                <option value="Profiles">Profiles</option>
+                <option value="Tuffan">Tuffan Glass</option>
+                <option value="Custom">Custom Work</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left border-collapse whitespace-nowrap">
             <thead>
-              <tr className="bg-ink/5 text-ink/70 text-sm uppercase tracking-wider">
-                <th className="p-4 font-bold">Image Preview</th>
-                <th className="p-4 font-bold">Details</th>
-                <th className="p-4 font-bold">Category</th>
-                <th className="p-4 font-bold">Span</th>
-                <th className="p-4 font-bold">Actions</th>
+              <tr className="bg-base/50 text-ink/50 text-xs uppercase tracking-wider font-bold">
+                <th className="p-5">Preview</th>
+                <th className="p-5">Project Details</th>
+                <th className="p-5">Layout Status</th>
+                <th className="p-5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              {loading ? (
-                <tr><td colSpan={5} className="p-8 text-center text-ink/50">Loading projects...</td></tr>
-              ) : projects.length === 0 ? (
-                <tr><td colSpan={5} className="p-8 text-center text-ink/50">No projects found. Upload one above.</td></tr>
-              ) : (
-                projects.map((proj) => (
-                  <tr key={proj._id} className={`border-t border-ink/5 transition-colors ${editingId === proj._id ? 'bg-primary/5' : 'hover:bg-ink/5'}`}>
-                    <td className="p-4">
-                      {/* Enhanced Image Visibility - larger 40x28 box with object-cover */}
-                      <div className="w-40 h-28 rounded-lg overflow-hidden bg-ink/10 relative group">
-                        <img src={proj.imageUrl} alt={proj.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                        {!proj.isVisible && (
-                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                            <span className="bg-black/60 text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Hidden</span>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <p className="font-bold text-ink">{proj.title}</p>
-                      <p className="text-xs text-ink/60 mt-1">{proj.type}</p>
-                      <p className="text-xs text-ink/40">{proj.dims}</p>
-                    </td>
-                    <td className="p-4"><span className="px-3 py-1 bg-ink/5 rounded-full text-xs font-bold">{proj.category}</span></td>
-                    <td className="p-4 text-sm font-medium">{proj.gridSpan}</td>
-                    <td className="p-4">
-                      <div className="flex items-center gap-1">
-                        <button onClick={() => toggleVisibility(proj._id, proj.isVisible)} className={`p-2 rounded-lg transition-colors ${proj.isVisible ? 'text-primary hover:bg-primary/10' : 'text-ink/40 hover:bg-ink/10'}`} title={proj.isVisible ? "Hide from Gallery" : "Show in Gallery"}>
-                          {proj.isVisible ? <FiEye /> : <FiEyeOff />}
-                        </button>
-                        <button onClick={() => startEdit(proj)} className="p-2 rounded-lg text-ink/50 hover:bg-ink/10 hover:text-ink transition-colors" title="Edit Project">
-                          <FiEdit2 />
-                        </button>
-                        <button onClick={() => handleDelete(proj._id)} className="p-2 rounded-lg text-red-500/70 hover:bg-red-50 hover:text-red-600 transition-colors" title="Delete Project">
-                          <FiTrash2 />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
+            <tbody className="divide-y divide-ink/5">
+              <AnimatePresence>
+                {loading ? (
+                  <tr><td colSpan={5} className="p-12 text-center text-ink/50 font-medium">Loading projects...</td></tr>
+                ) : filteredProjects.length === 0 ? (
+                  <tr><td colSpan={5} className="p-12 text-center text-ink/50 font-medium">No projects found.</td></tr>
+                ) : (
+                  filteredProjects.map((proj, i) => (
+                    <motion.tr 
+                      key={proj._id} 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.2, delay: i * 0.05 }}
+                      className={`transition-colors group ${editingId === proj._id ? 'bg-primary/5' : 'hover:bg-primary/5'}`}
+                    >
+                      <td className="p-5">
+                        <div className="w-48 h-32 rounded-xl overflow-hidden bg-ink/5 relative group/img shadow-sm border border-ink/5">
+                          <img src={proj.imageUrl} alt={proj.title} className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-110" />
+                          {!proj.isVisible && (
+                            <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center">
+                              <span className="bg-white text-ink text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">Hidden</span>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="p-5">
+                        <p className="font-black text-ink text-base">{proj.title}</p>
+                        <p className="text-sm text-ink/60 mt-1 font-medium">{proj.type}</p>
+                        <p className="text-xs text-ink/40 mt-0.5">{proj.dims}</p>
+                      </td>
+                      <td className="p-5">
+                        <div className="flex flex-col gap-2 items-start">
+                          <span className="px-3 py-1 bg-ink/5 rounded-md text-xs font-bold text-ink/70 border border-ink/5">{proj.category}</span>
+                          <span className="text-xs text-ink/50 font-medium uppercase tracking-wider">Span: {proj.gridSpan}</span>
+                        </div>
+                      </td>
+                      <td className="p-5 text-right">
+                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button onClick={() => toggleVisibility(proj._id, proj.isVisible)} className={`p-2.5 rounded-xl transition-all ${proj.isVisible ? 'bg-primary/10 text-primary hover:bg-primary hover:text-white' : 'bg-ink/5 text-ink/40 hover:bg-ink/10 text-ink/60'}`} title={proj.isVisible ? "Hide from Gallery" : "Show in Gallery"}>
+                            {proj.isVisible ? <FiEye /> : <FiEyeOff />}
+                          </button>
+                          <button onClick={() => startEdit(proj)} className="p-2.5 rounded-xl bg-ink/5 text-ink/50 hover:bg-ink hover:text-white transition-all" title="Edit Project">
+                            <FiEdit2 />
+                          </button>
+                          <button onClick={() => handleDelete(proj._id)} className="p-2.5 rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all" title="Delete Project">
+                            <FiTrash2 />
+                          </button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))
+                )}
+              </AnimatePresence>
             </tbody>
           </table>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
